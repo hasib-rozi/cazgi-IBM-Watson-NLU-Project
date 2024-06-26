@@ -18,10 +18,12 @@ dotenv.config();
 const api_key = process.env.API_KEY;
 const api_url = process.env.API_URL;
 
+const https = require('https');
+const agent = new https.Agent({
+  rejectUnauthorized: false
+});
+
 function getNLUInstance() {
-    /*Type the code to create the NLU instance and return it.
-    You can refer to the image in the instructions document
-    to do the same.*/
     const NaturalLanguageUnderstandingV1 = require('ibm-watson/natural-language-understanding/v1');
     const { IamAuthenticator } = require('ibm-watson/auth');
 
@@ -30,7 +32,9 @@ function getNLUInstance() {
         authenticator: new IamAuthenticator ({
             apikey: api_key
         }),
-        serviceUrl: api_url
+        serviceUrl: api_url,
+        disableSslVerification: true,
+        httpsAgent: agent
     });
     return naturalLanguageUnderstanding;
 }
